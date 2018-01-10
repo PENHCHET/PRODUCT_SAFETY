@@ -1,0 +1,112 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Product Safety Searching</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1 style="text-align: center;">Product Safety Searching</h1>
+        <div style="text-align: center;">
+            <input type="text" name="search-query" id="search-query" style="width: 500px;">
+            <input type="button" id="btnSearch" value="Search"/>
+        </div>
+        <p id="TOTAL_COUNT"></p>
+        <div>
+            <ul id="RESULT"></ul>
+        </div>
+        <div>
+            <div id="PAGINATION"></div>
+        </div>
+    </div>
+    <script id="RESULT_TEMPLATE" type="text/x-jquery-tmpl">
+        <li><a href="{{= source.URL}}">{{= source.title}} | Price = {{= source.originalPrice }}</a></li>
+    </script>
+
+    <script th:src="@{/static/javascripts/libraries/jquery.tmpl.min.js}"></script>
+    <script th:src="@{/static/javascripts/libraries/jquery.bootpag.min.js}"></script>
+    <script th:src="@{/static/javascripts/libraries/jquery.bpopup.min.js}"></script>
+    <script type="application/javascript">
+        $(function() {
+
+            var checkPagination = true;
+            var currentPage = 1;
+
+            //TODO: TO SET THE PAGINATION FOR THE USERS LIST
+            var setPagination = function(totalPage){
+                $('#PAGINATION').bootpag({
+                    total: totalPage,
+                    page: currentPage,
+                    maxVisible: 10,
+                    leaps: true,
+                    firstLastUse: true,
+                    first: 'First',
+                    last: 'Last',
+                    wrapClass: 'pagination',
+                    activeClass: 'active',
+                    disabledClass: 'disabled',
+                    nextClass: 'next',
+                    prevClass: 'prev',
+                    lastClass: 'last',
+                    firstClass: 'first'
+                });
+            };
+
+            var findAll = function() {
+                $.ajax({
+                    url: "http://localhost:8080/v1/api/search/products-query",
+                    data: {
+                        query: $("#search-query").val(),
+                        page: currentPage
+                    },
+                    success: function(response) {
+                        $("#RESULT").html("");
+                        if(response.DATA.length == 0) {
+                            $("#PAGINATION").html("");
+                            $("#TOTAL_COUNT").html("");
+                            return;
+                        }
+                        $("#RESULT_TEMPLATE").tmpl(response.DATA).appendTo("#RESULT");
+                        if (checkPagination) {
+                            checkPagination = false;
+                            $("#TOTAL_COUNT").html("TOTAL RECORDS: " + response.PAGINATION.TOTAL_COUNT);
+                            setPagination(response.PAGINATION.TOTAL_PAGES);
+                        }
+                        console.log(response);
+                    }
+                })
+            };
+
+            $('#PAGINATION').bootpag().on("page", function(event, page){
+                checkPagination = false;
+                currentPage = page;
+                findAll();
+            });
+
+            $("#btnSearch").click(function() {
+                if($("search-query").val() == "") {
+                    return;
+                }
+                checkPagination = true;
+                currentPage = 1;
+                findAll();
+            });
+
+            $('#search-query').keyup(function(e){
+                if(e.keyCode == 13)
+                {
+                    $("#btnSearch").trigger("click");
+                }
+            });
+        });
+    </script>
+</body>
+</html>
