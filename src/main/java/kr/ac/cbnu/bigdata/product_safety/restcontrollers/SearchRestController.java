@@ -26,7 +26,7 @@ public class SearchRestController {
     @ApiOperation("Search a Product in the Product_Safty Index and Coupang_Products Type")
     @RequestMapping(value = "/products/{productId}", method = RequestMethod.GET)
     public GetResponse test(@PathVariable String productId) {
-        GetResponse response = client.prepareGet("korean_docs", "coupang_products", productId).get();
+        GetResponse response = client.prepareGet("test-dcinside", "dcinside_contents", productId).get();
         return response;
     }
 
@@ -34,8 +34,8 @@ public class SearchRestController {
     @RequestMapping(value = "/products", method = RequestMethod.GET)
     public SearchResponse allHits() {
         SearchResponse allHits = client.prepareSearch()
-                .setIndices("korean_docs")
-                .setTypes("coupang_products")
+                .setIndices("test-dcinside")
+                .setTypes("dcinside_contents")
                 .setFrom(0)
                 .setSize(15)
                 .setQuery(

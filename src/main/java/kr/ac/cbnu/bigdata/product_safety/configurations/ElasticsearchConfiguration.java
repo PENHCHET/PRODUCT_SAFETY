@@ -2,7 +2,7 @@ package kr.ac.cbnu.bigdata.product_safety.configurations;
 
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
-import org.elasticsearch.common.transport.InetSocketTransportAddress;
+import org.elasticsearch.common.transport.TransportAddress;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,7 +68,9 @@ public class ElasticsearchConfiguration implements FactoryBean<TransportClient>,
             String InetSocket[] = clusterNodes.split(":");
             String address = InetSocket[0];
             Integer port = Integer.valueOf(InetSocket[1]);
-            transportClient = preBuiltTransportClient.addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName(address), port));
+            transportClient = preBuiltTransportClient
+                    .addTransportAddress(new TransportAddress(InetAddress.getByName(address), port))
+                    .addTransportAddress(new TransportAddress(InetAddress.getByName("210.115.187.98"), 9300));
         } catch (UnknownHostException e) {
             logger.error(e.getMessage());
         }
@@ -78,7 +80,11 @@ public class ElasticsearchConfiguration implements FactoryBean<TransportClient>,
      * TODO: To create the Default Settings
      */
     private Settings settings() {
-        Settings settings = Settings.builder().put("cluster.name", "Elasticsearch").build();
+        Settings settings = Settings.builder()
+                .put("cluster.name", "Elasticsearch")
+                .put("client.transport.sniff", true)
+                .put("transport.tcp.compress", true)
+                .build();
         return settings;
     }
 }
