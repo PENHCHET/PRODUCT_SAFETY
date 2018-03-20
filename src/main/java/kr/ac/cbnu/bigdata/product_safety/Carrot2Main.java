@@ -4,6 +4,7 @@ import org.carrot2.clustering.lingo.LingoClusteringAlgorithm;
 import org.carrot2.clustering.synthetic.ByUrlClusteringAlgorithm;
 import org.carrot2.core.*;
 import org.carrot2.text.clustering.MultilingualClustering;
+import org.elasticsearch.client.ElasticsearchClient;
 
 import javax.sound.sampled.Control;
 import java.util.ArrayList;
