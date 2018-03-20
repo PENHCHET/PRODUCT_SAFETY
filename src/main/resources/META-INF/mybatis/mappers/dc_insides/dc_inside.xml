@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.ac.cbnu.bigdata.product_safety.repositories.DCInsideContentRepository">
+	
+	<resultMap id="DCInsideResultMap" type="kr.ac.cbnu.bigdata.product_safety.models.DCInsideContent">
+		<result property="dcContIndex" column="dc_cont_index" />
+		<result property="boardNum" column="board_num" />
+		<result property="boardTitle" column="board_title" />
+		<result property="writerId" column="writer_id" />
+		<result property="content" column="content" />
+		<result property="contentDate" column="content_date" />
+		<result property="insertDate" column="insert_date" />
+	</resultMap>
+	<select id="getAllDCInsideContents" resultMap="DCInsideResultMap">
+		SELECT dc_cont_index, board_num, board_title, writer_id, content, content_date, insert_date
+		FROM dcinside_contents
+	</select>
+	
+</mapper>
