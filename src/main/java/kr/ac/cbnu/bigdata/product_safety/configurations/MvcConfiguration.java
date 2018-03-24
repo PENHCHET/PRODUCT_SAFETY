@@ -1,5 +1,6 @@
 package kr.ac.cbnu.bigdata.product_safety.configurations;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.elasticsearch.common.inject.Inject;

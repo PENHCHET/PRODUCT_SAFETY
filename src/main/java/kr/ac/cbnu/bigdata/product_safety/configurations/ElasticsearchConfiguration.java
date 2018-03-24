@@ -69,8 +69,8 @@ public class ElasticsearchConfiguration implements FactoryBean<TransportClient>,
             String address = InetSocket[0];
             Integer port = Integer.valueOf(InetSocket[1]);
             transportClient = preBuiltTransportClient
-                    .addTransportAddress(new TransportAddress(InetAddress.getByName(address), port))
-                    .addTransportAddress(new TransportAddress(InetAddress.getByName("210.115.187.98"), 9300));
+                    .addTransportAddress(new TransportAddress(InetAddress.getByName(address), port));
+//                    .addTransportAddress(new TransportAddress(InetAddress.getByName("210.115.187.98"), 9300));
         } catch (UnknownHostException e) {
             logger.error(e.getMessage());
         }
